@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nearby Places</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #f9f9f9;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nearby Places</h1>
+    <ul id="places-list"></ul>
+
+    <script>
+        // Parse the query parameters to get the places
+        const urlParams = new URLSearchParams(window.location.search);
+        const places = JSON.parse(urlParams.get('places') || '[]');
+
+        // Display the places in the list
+        const placesList = document.getElementById('places-list');
+        if (places.length > 0) {
+            places.forEach(place => {
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = `/place_details?place=${encodeURIComponent(place)}`;
+                link.textContent = place;
+                listItem.appendChild(link);
+                placesList.appendChild(listItem);
+            });
+        } else {
+            placesList.innerHTML = '<li>No places found.</li>';
+        }
+    </script>
+</body>
+</html>

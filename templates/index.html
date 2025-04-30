@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Travel Safety Companion</title>
+    <link rel="stylesheet" href="/static/style.css">
+   
+    
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            color: white;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5); /* semi-transparent overlay */
+            max-width: 500px;
+            margin: 5% auto;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 90%;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop class="video-bg">
+        <source src="/static/travel.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <video autoplay muted loop class="video-bg">
+        <source src="/static/travel.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+
+    <!-- 🔹 Background Video -->
+    <video autoplay muted loop class="video-bg">
+        <source src="/static/travel.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="container">
+        <h1>Smart Travel Safety Companion</h1>
+        <form action="/submit" method="POST">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+            
+            <label for="country">Country:</label>
+            <input type="text" id="country" name="country" required>
+            
+            <label for="phrase">Phrase:</label>
+            <input type="text" id="phrase" name="phrase">
+            
+            <label for="target_lang">Target Language:</label>
+            <input type="text" id="target_lang" name="target_lang">
+            
+            <button type="submit">Submit</button>
+        </form>
+        
+        
+    </div>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel Safety Results</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            overflow: auto;
+            background: #000;
+        }
+
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 5% auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #ffffff;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-left: 6px solid #4fc3f7;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            color: #4fc3f7;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .back-btn {
+            display: block;
+            width: fit-content;
+            margin: 0 auto 15px; /* Add bottom margin for spacing */
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #4fc3f7, #0288d1);
+            color: white;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(90deg, #0288d1, #4fc3f7);
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                padding: 25px;
+                margin: 10% 10px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+
+        #map {
+    height: 400px;
+    margin-top: 20px;
+    border-radius: 16px;
+}
+    </style>
+    <!-- Leaflet.js CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet.js JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <video autoplay muted loop class="video-bg">
+        <source src="/static/travel.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <h1>Travel Safety Summary</h1>
+
+        {% if safety_info %}
+        <div class="section">
+            <h2>🛡️ Safety Alerts</h2>
+            <p>{{ safety_info }}</p>
+        </div>
+        {% endif %}
+
+        {% if emergency_info %}
+        <div class="section">
+            <h2>🚑 Emergency Contacts</h2>
+            <p>{{ emergency_info }}</p>
+        </div>
+        {% endif %}
+
+        {% if translation %}
+        <div class="section">
+            <h2>🌐 Translated Phrase</h2>
+            <p>{{ translation }}</p>
+        </div>
+        
+{% endif %}
+
+
+    <!-- Buttons with spacing -->
+    <a href="/" class="back-btn" style="margin-bottom: 10px;">← Back to Home</a>
+    <a href="#map" class="back-btn">🗺️ View Map</a>
+
+    <!-- Map Section -->
+    <div id="map" style="height: 400px; margin-top: 20px; border-radius: 16px;"></div>
+
+    <!-- Button to fetch nearby places -->
+<button id="nearby-places-btn" style="margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+    Show Nearby Places
+</button>
+
+<script>
+    // Initialize the map
+    const map = L.map('map').setView([0, 0], 2); // Default view
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let currentLat = 0;
+    let currentLon = 0;
+
+    // Function to update the map with city and country
+    function updateMap(city, country) {
+        fetch(`https://nominatim.openstreetmap.org/search?city=${city}&country=${country}&format=json`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    const { lat, lon } = data[0];
+                    currentLat = lat;
+                    currentLon = lon;
+                    map.setView([lat, lon], 12); // Zoom to the location
+                    L.marker([lat, lon]).addTo(map)
+                        .bindPopup(`${city}, ${country}`)
+                        .openPopup();
+                } else {
+                    alert('Location not found!');
+                }
+            })
+            .catch(error => console.error('Error fetching location:', error));
+    }
+
+    // Replace 'city' and 'country' with your dynamic variables
+    const city = "{{ city }}"; // City from the backend
+    const country = "{{ country }}"; // Country from the backend
+
+    if (city && country) {
+        updateMap(city, country);
+    }
+
+    // Fetch nearby places and redirect to places.html
+    document.getElementById('nearby-places-btn').addEventListener('click', () => {
+        if (currentLat && currentLon) {
+            fetch(`https://overpass-api.de/api/interpreter?data=[out:json];node(around:5000,${currentLat},${currentLon})[tourism];out;`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.elements.length > 0) {
+                        const places = data.elements.map(place => place.tags.name || 'Unnamed Place');
+                        const queryString = new URLSearchParams({ places: JSON.stringify(places) }).toString();
+                        window.location.href = `/places?${queryString}`;
+                    } else {
+                        alert('No nearby places found.');
+                    }
+                })
+                .catch(error => console.error('Error fetching nearby places:', error));
+        } else {
+            alert('Map location not set yet!');
+        }
+    });
+</script>
+</body>
+</html>

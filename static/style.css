@@ -1,0 +1,72 @@
+/* 🔹 Background video */
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -2;
+    object-fit: cover;
+}
+
+/* 🔹 Optional dark overlay for contrast */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5); /* adjust darkness here */
+    z-index: -1;
+}
+
+/* 🔹 Main content */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.container {
+    position: relative;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: rgba(0, 0, 0, 0.6); /* semi-transparent for readability */
+    border-radius: 10px;
+}
+
+input, button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.output {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+.video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    object-fit: cover;
+}
